@@ -12,8 +12,8 @@ public class Output : MonoBehaviour
 
     public bool Visible 
     {
-        get => _label.activeSelf;
-        set => _label.SetActive(value);
+        get => _body.activeSelf;
+        set => _body.SetActive(value);
     }
 
     public string Text
@@ -28,6 +28,6 @@ public class Output : MonoBehaviour
         set => _text.color = value;
     }
 
-    [SerializeField] private GameObject _label;
+    [SerializeField] private GameObject _body;
     [SerializeField] private TextMeshProUGUI _text;
 }

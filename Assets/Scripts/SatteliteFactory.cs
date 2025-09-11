@@ -3,7 +3,7 @@ using SGPdotNET.TLE;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
-using static Unity.VisualScripting.Member;
+
 
 public class SatteliteFactory : MonoBehaviour 
 {
@@ -25,8 +25,8 @@ public class SatteliteFactory : MonoBehaviour
 
         if (fromResources)
         {
-            var mytxtData = (TextAsset)Resources.Load("ActiveSatellites.tle");
-            satData = mytxtData.text;
+            var mytxtData = (TextAsset)Resources.Load(source);
+            satData = mytxtData.text;          
         }
         else 
         {
@@ -47,7 +47,8 @@ public class SatteliteFactory : MonoBehaviour
         {
             if (i % 50 == 0) 
             {
-                _output.Text = $"Populating... ({i})";  
+                _output.Text = $"Populating... ({i / 3})";
+                _output.Visible = true;
                 await Task.Delay(1);
             }
 
@@ -65,7 +66,7 @@ public class SatteliteFactory : MonoBehaviour
             }
         }
 
-        _output.Text = $"Loading complete ({lines.Length/3})";
+        _output.Text = $"Loaded {lines.Length / 3} satellites.";
 
         await Task.Delay(3500);
         _output.Visible = false;
@@ -86,9 +87,7 @@ public class SatteliteFactory : MonoBehaviour
     [SerializeField] private GameObject _orbitLinePrefab, _satellitePrefab;
     [SerializeField] private int _orbitSteps = 32;
     [SerializeField] private float _orbitMinutes = 5f;
-
     private List<GameObject> _satellites = new ();
-
     private Output _output;
 }
 

@@ -13,14 +13,11 @@ public class CameraDolly : MonoBehaviour
     {
         if (Input.touchCount == 2)
         {
-            // Touch input: handle pinch
             HandlePinchInput(Input.GetTouch(0), Input.GetTouch(1));
         }
         else
         {
             _lastDist = 0f;
-
-            // Mouse scroll wheel input (e.g. editor / desktop)
             float scroll = Input.mouseScrollDelta.y;
             if (Mathf.Abs(scroll) > Mathf.Epsilon)
             {
@@ -29,7 +26,6 @@ public class CameraDolly : MonoBehaviour
             }
         }
 
-        // Update camera position
         _cameraTarget.localPosition = new Vector3(0, 0, -_dist);
         _mainCam.position = Vector3.Lerp(_mainCam.position, _cameraTarget.position, Time.deltaTime * _smoothing);
     }
@@ -41,7 +37,7 @@ public class CameraDolly : MonoBehaviour
         if (_lastDist > 0f)
         {
             float pinchDelta = _lastDist - currentDist;
-            _dist += pinchDelta * _sensitivitiy * 0.02f; // 0.02f makes it less aggressive
+            _dist -= pinchDelta * _sensitivitiy * 0.02f;
             _dist = Mathf.Clamp(_dist, 7f, 150f);
         }
 

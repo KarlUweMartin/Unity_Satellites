@@ -1,27 +1,35 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Net.Http;
 using System.Threading.Tasks;
+using UnityEngine;
+using UnityEngine.Networking;
 
 public class TleClient
 {
-    private readonly HttpClient _httpClient;
-
-    public TleClient(HttpClient httpClient = null)
-    {
-        _httpClient = httpClient ?? new HttpClient();
-    }
-
     public async Task<string> DownloadTleAsync(string tleUrl)
     {
         if (string.IsNullOrWhiteSpace(tleUrl)) return null;
 
         try
         {
-            var response = await _httpClient.GetAsync(tleUrl);
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadAsStringAsync();
+            using (var req = UnityWebRequest.Get(tleUrl))
+            {
+                var op = req.SendWebRequest();
+                while (!op.isDone)
+                    await Task.Yield(); // WebGL-safe "await"
+
+#if UNITY_2020_2_OR_NEWER
+                if (req.result != UnityWebRequest.Result.Success)
+#else
+                if (req.isNetworkError || req.isHttpError)
+#endif
+                {
+                    Output.Instance.Text = req.error;
+                    throw new Exception(req.error);
+                }
+
+                return req.downloadHandler.text;
+            }
         }
         catch (Exception ex)
         {
@@ -30,14 +38,13 @@ public class TleClient
         }
     }
 
-
     public Dictionary<string, string> DataSetUrls = new Dictionary<string, string>
     {
-        { "Last30Days", BaseUrl + "gp.php?GROUP=last-30-days&FORMAT=tle" },
+        { "Active Sattelites", BaseUrl + "gp.php?GROUP=active&FORMAT=tle" },
+        { "Last 30 days", BaseUrl + "gp.php?GROUP=last-30-days&FORMAT=tle" },
+        { "Starlink", BaseUrl + "gp.php?GROUP=starlink&FORMAT=tle" },
         { "Stations", BaseUrl + "gp.php?GROUP=stations&FORMAT=tle" },
         { "Visual", BaseUrl + "gp.php?GROUP=visual&FORMAT=tle" },
-        { "Active", BaseUrl + "gp.php?GROUP=active&FORMAT=tle" },
-        { "Analyst", BaseUrl + "gp.php?GROUP=analyst&FORMAT=tle" },
         { "Cosmos1408Debris", BaseUrl + "gp.php?GROUP=cosmos-1408-debris&FORMAT=tle" },
         { "Fengyun1CDebris", BaseUrl + "gp.php?GROUP=fengyun-1c-debris&FORMAT=tle" },
         { "Iridium33Debris", BaseUrl + "gp.php?GROUP=iridium-33-debris&FORMAT=tle" },
@@ -59,7 +66,6 @@ public class TleClient
         { "SES", BaseUrl + "gp.php?GROUP=ses&FORMAT=tle" },
         { "Eutelsat", BaseUrl + "gp.php?GROUP=eutelsat&FORMAT=tle" },
         { "Telesat", BaseUrl + "gp.php?GROUP=telesat&FORMAT=tle" },
-        { "Starlink", BaseUrl + "gp.php?GROUP=starlink&FORMAT=tle" },
         { "OneWeb", BaseUrl + "gp.php?GROUP=oneweb&FORMAT=tle" },
         { "Qianfan", BaseUrl + "gp.php?GROUP=qianfan&FORMAT=tle" },
         { "Hulianwang", BaseUrl + "gp.php?GROUP=hulianwang&FORMAT=tle" },
@@ -90,5 +96,4 @@ public class TleClient
     };
 
     private const string BaseUrl = "https://celestrak.org/NORAD/elements/";
-
 }
