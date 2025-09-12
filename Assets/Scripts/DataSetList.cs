@@ -11,14 +11,14 @@ public class DataSetList : MonoBehaviour
 
         var dataSets = Resources.LoadAll<TextAsset>("TLE");
 
-        foreach (var dataSet in dataSets  /*tle.DataSetUrls*/) 
+        foreach (var dataSet in dataSets  /*tle.DataSetUrls*/)
         {
             var entry = Instantiate(_entryPrefab, _list, false);
             entry.GetComponentInChildren<TextMeshProUGUI>().text = dataSet.name;
             entry.GetComponent<Button>().onClick.AddListener(() =>
             {
                 _selectedDataSet.text = dataSet.name;
-                _ = _satelliteFactory.GetSattelites(true, Path.Combine("TLE", dataSet.name));
+                _ = _satelliteFactory.GetSattelites(true, "TLE/" + dataSet.name);
                 Open = false;
             });
             //entry.GetComponent<Button>().onClick.AddListener(() => _ = _satelliteFactory.GetSattelites(true));
@@ -27,18 +27,18 @@ public class DataSetList : MonoBehaviour
         }
     }
 
-    public void ToggleOpen() 
+    public void ToggleOpen()
     {
         Open = !gameObject.activeSelf;
     }
 
-    public bool Open 
+    public bool Open
     {
         get => gameObject.activeSelf;
-        set 
-        {        
+        set
+        {
             gameObject.SetActive(value);
-            _dolly.enabled = !value;           
+            _dolly.enabled = !value;
         }
     }
 

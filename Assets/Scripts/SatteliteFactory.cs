@@ -5,16 +5,16 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 
-public class SatteliteFactory : MonoBehaviour 
+public class SatteliteFactory : MonoBehaviour
 {
     private void Start()
     {
         _output = Output.Instance;
     }
 
-    public async Task GetSattelites(bool fromResources, string source = "" )
+    public async Task GetSattelites(bool fromResources, string source = "")
     {
-        foreach (var sat in _satellites) 
+        foreach (var sat in _satellites)
         {
             Destroy(sat);
         }
@@ -26,9 +26,9 @@ public class SatteliteFactory : MonoBehaviour
         if (fromResources)
         {
             var mytxtData = (TextAsset)Resources.Load(source);
-            satData = mytxtData.text;          
+            satData = mytxtData.text;
         }
-        else 
+        else
         {
             var tleClient = new TleClient();
             satData = await tleClient.DownloadTleAsync(source);
@@ -45,7 +45,7 @@ public class SatteliteFactory : MonoBehaviour
 
         for (int i = 0; i < lines.Length - 2; i += 3)
         {
-            if (i % 50 == 0) 
+            if (i % 50 == 0)
             {
                 _output.Text = $"Populating... ({i / 3})";
                 _output.Visible = true;
@@ -87,7 +87,7 @@ public class SatteliteFactory : MonoBehaviour
     [SerializeField] private GameObject _orbitLinePrefab, _satellitePrefab;
     [SerializeField] private int _orbitSteps = 32;
     [SerializeField] private float _orbitMinutes = 5f;
-    private List<GameObject> _satellites = new ();
+    private List<GameObject> _satellites = new();
     private Output _output;
 }
 
