@@ -9,22 +9,41 @@ public class DataSetList : MonoBehaviour
     {
         var tle = new TleClient();
 
-        var dataSets = Resources.LoadAll<TextAsset>("TLE");
-
-        foreach (var dataSet in dataSets  /*tle.DataSetUrls*/)
+        if (_useResources)
         {
-            var entry = Instantiate(_entryPrefab, _list, false);
-            entry.GetComponentInChildren<TextMeshProUGUI>().text = dataSet.name;
-            entry.GetComponent<Button>().onClick.AddListener(() =>
+            var dataSets = Resources.LoadAll<TextAsset>("TLE");
+            foreach (var dataSet in dataSets  /*tle.DataSetUrls*/)
             {
-                _selectedDataSet.text = dataSet.name;
-                _ = _satelliteFactory.GetSattelites(true, "TLE/" + dataSet.name);
-                Open = false;
-            });
-            //entry.GetComponent<Button>().onClick.AddListener(() => _ = _satelliteFactory.GetSattelites(true));
+                var entry = Instantiate(_entryPrefab, _list, false);
+                entry.GetComponentInChildren<TextMeshProUGUI>().text = dataSet.name;
+                entry.GetComponent<Button>().onClick.AddListener(() =>
+                {
+                    _selectedDataSet.text = dataSet.name;
+                    _ = _satelliteFactory.GetSattelites(true, "TLE/" + dataSet.name);
+                    Open = false;
+                });
+                //entry.GetComponent<Button>().onClick.AddListener(() => _ = _satelliteFactory.GetSattelites(true));
 
-            _dolly.enabled = false;
+            }
         }
+        else
+        {
+            var dataSets = Resources.LoadAll<TextAsset>("TLE");
+            foreach (var dataSet in tle.DataSetUrls)
+            {
+                var entry = Instantiate(_entryPrefab, _list, false);
+                entry.GetComponentInChildren<TextMeshProUGUI>().text = dataSet.Key;
+                entry.GetComponent<Button>().onClick.AddListener(() =>
+                {
+                    _selectedDataSet.text = dataSet.Key;
+                    _ = _satelliteFactory.GetSattelites(false, dataSet.Value);
+                    Open = false;
+                });
+                //entry.GetComponent<Button>().onClick.AddListener(() => _ = _satelliteFactory.GetSattelites(true));
+
+            }
+        }
+        _dolly.enabled = false;
     }
 
     public void ToggleOpen()
@@ -41,6 +60,8 @@ public class DataSetList : MonoBehaviour
             _dolly.enabled = !value;
         }
     }
+
+    [SerializeField] private bool _useResources = true;
 
     [SerializeField] private Transform _list;
     [SerializeField] private GameObject _entryPrefab;

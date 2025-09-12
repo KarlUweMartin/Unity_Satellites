@@ -1093,6 +1093,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6eb7ec836adc0ae4fb612957076bd0e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _useResources: 0
   _list: {fileID: 1755885250}
   _entryPrefab: {fileID: 1716911041607792779, guid: a94fec95404961e4583bf57fd8ebc37f, type: 3}
   _satelliteFactory: {fileID: 1176159472}
@@ -1904,7 +1905,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 210.71684, y: -29.416626}
+  m_SizeDelta: {x: 210.71684, y: -43}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1634940505
 MonoBehaviour:
@@ -1926,7 +1927,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Data from Sep. 11th, 2025 - 21:42pm
+  m_text: 'TLE data from celestrak.org
+
+    github.com/KarlSupertramp'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1953,8 +1956,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 8
-  m_fontSizeBase: 8
+  m_fontSize: 9
+  m_fontSizeBase: 9
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

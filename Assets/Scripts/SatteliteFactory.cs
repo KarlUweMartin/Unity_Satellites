@@ -47,9 +47,9 @@ public class SatteliteFactory : MonoBehaviour
         {
             if (i % 50 == 0)
             {
-                _output.Text = $"Populating... ({i / 3})";
+                //_output.Text = $"Populating... ({i / 3})";
                 _output.Visible = true;
-                await Task.Delay(1);
+                //await Task.Delay(1);
             }
 
             string name = lines[i].Trim();
@@ -68,8 +68,8 @@ public class SatteliteFactory : MonoBehaviour
 
         _output.Text = $"Loaded {lines.Length / 3} satellites.";
 
-        await Task.Delay(3500);
-        _output.Visible = false;
+        //await Task.Delay(3500);
+        //_output.Visible = false;
     }
 
     void CreateSattelite(string name, string line1, string line2)
