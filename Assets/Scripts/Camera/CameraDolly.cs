@@ -36,7 +36,7 @@ public class CameraDolly : MonoBehaviour
 
         if (_lastDist > 0f)
         {
-            float pinchDelta = _lastDist - currentDist;
+            float pinchDelta = _lastDist + currentDist;
             _dist -= pinchDelta * _sensitivitiy * 0.02f;
             _dist = Mathf.Clamp(_dist, 7f, 150f);
         }

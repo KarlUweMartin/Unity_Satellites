@@ -1,38 +1,42 @@
-using TMPro;
 using UnityEngine;
 
 public class SatelliteSelector : MonoBehaviour
 {
 
-    private void Start()
-    {
-        _output = Output.Instance;
-    }
-
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            ClearLastSelected();
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (_output == null) 
+            {
+                _output = Output.Instance;
+            }
 
+            if (_orbitAnimation != null) 
+            {
+                StopCoroutine(_orbitAnimation);
+            }
+
+            ClearLastSelected();
+            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
                 if (hit.collider.gameObject.TryGetComponent<SatelliteObject>(out var satellite))
                 {
-                    var orbitObj = satellite.DrawFullOrbit();
-                    _output.Text = satellite.name.ToString();
-                    _activeOrbit = orbitObj;
                     _output.Visible = true;
+                    _output.Text = satellite.name.ToString();
+                    _orbitAnimation = StartCoroutine(satellite.OrbitAnimation(_lineRenderer));
                 }
-                else if (hit.collider.gameObject.TryGetComponent<MoonBehaviour>(out var moon))
+                else if (hit.collider.gameObject.TryGetComponent<MoonBehaviour>(out _))
                 {
                     _output.Text = "Moon";
                     _output.Visible = true;
+                    _lineRenderer.enabled = false;
                 }
             }
             else
             {
+                _lineRenderer.enabled = false;                
                 _output.Visible = false;
             }
         }
@@ -46,6 +50,8 @@ public class SatelliteSelector : MonoBehaviour
         }
     }
 
+    [SerializeField] private LineRenderer _lineRenderer;
     private Output _output;
     private GameObject _activeOrbit;
+    private Coroutine _orbitAnimation;
 }

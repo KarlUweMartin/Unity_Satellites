@@ -8,53 +8,44 @@ public class SatelliteObject : MonoBehaviour
 {
     public void Setup(Satellite satellite)
     {
+        _sat = satellite;
         name = satellite.Name;
-        _satellite = satellite;
-
-        var eciNow = _satellite.Predict(DateTime.UtcNow);
-        transform.localPosition = ConvertEciToUnityPosition(eciNow.Position);
+        var eciNow = satellite.Predict(_now);
+        transform.localPosition = ConvertEciToUnityPositionAt(eciNow.Position, _now);
     }
 
-    public void DrawOrbit()
+    public IEnumerator OrbitAnimation(LineRenderer line)
     {
-        var orbitObj = Instantiate(_orbitLinePrefab, transform);
-        orbitObj.name = $"{_satellite.Name}_Orbit";
+        if (line == null || _sat == null) yield break;
 
-        var line = orbitObj.GetComponent<LineRenderer>();
-        line.positionCount = _orbitSteps;
+        line.enabled = true;
+        line.useWorldSpace = true;
+        line.loop = false;
 
+        var orbitPositions = OrbitPositions_Fast();
+        if (orbitPositions == null || orbitPositions.Length == 0) yield break;
 
-        var pastSteps = _orbitSteps / 2;
-        var futureSteps = _orbitSteps - pastSteps; 
+        line.positionCount = 1;
+        line.SetPosition(0, orbitPositions[0]);
 
-        var stepMinutes = 90 / _orbitSteps;
-        var startTime = DataController.StartTime;
-
-        for (int i = 0; i < pastSteps; i++)
+        for (int i = 1; i < orbitPositions.Length; i++)
         {
-            var t = startTime.AddMinutes(-((pastSteps - i) * stepMinutes));
-            var eci = _satellite.Predict(t);
-            var unityPos = ConvertEciToUnityPosition(eci.Position);
-            line.SetPosition(i, unityPos);
+            if (line == null) yield break;
+
+            line.positionCount = i + 1;
+            line.SetPosition(i, orbitPositions[i]);
+            yield return new WaitForFixedUpdate();
         }
-        for (int i = 0; i < futureSteps; i++)
-        {
-            var t = startTime.AddMinutes(i * stepMinutes);
-            var eci = _satellite.Predict(t);
-            var unityPos = ConvertEciToUnityPosition(eci.Position);
-            line.SetPosition(pastSteps + i, unityPos);
-        }
+
+        line.loop = true;
     }
-    public GameObject DrawFullOrbit()
-    {
-        var orbitObj = Instantiate(_orbitLinePrefab, transform);
-        orbitObj.name = $"{_satellite.Name}_Orbit";
-        var line = orbitObj.GetComponent<LineRenderer>();
 
+    private Vector3[] OrbitPositions_Fast()
+    {
         var now = DataController.StartTime;
-        Vector3 r1 = ConvertEciToUnityPosition(_satellite.Predict(now).Position);
-        Vector3 r2 = ConvertEciToUnityPosition(_satellite.Predict(now.AddMinutes(120)).Position);
-        Vector3 r3 = ConvertEciToUnityPosition(_satellite.Predict(now.AddMinutes(240)).Position);
+        Vector3 r1 = ConvertEciToUnityPositionAt(_sat.Predict(now).Position, _now);
+        Vector3 r2 = ConvertEciToUnityPositionAt(_sat.Predict(now.AddMinutes(120)).Position, _now);
+        Vector3 r3 = ConvertEciToUnityPositionAt(_sat.Predict(now.AddMinutes(240)).Position, _now);
 
         Vector3 v1 = r2 - r1;
         Vector3 v2 = r3 - r2;
@@ -75,37 +66,37 @@ public class SatelliteObject : MonoBehaviour
             orbitPositions.Add(point);
         }
 
-        StartCoroutine(OrbitAnimation(line, orbitPositions));
-
-        return orbitObj;
+        return orbitPositions.ToArray();
     }
 
-    private IEnumerator OrbitAnimation(LineRenderer line, List<Vector3> points) 
+    private Vector3 ConvertEciToUnityPositionAt(SGPdotNET.Util.Vector3 eciKm, DateTime tUtc)
     {
-        line.positionCount = 1;
-        line.SetPosition(0, line.gameObject.transform.position);
+        double gmst = GmstRadians(JulianDate(tUtc));
+        double c = Math.Cos(gmst), s = Math.Sin(gmst);
+        double xE = c * eciKm.X + s * eciKm.Y;
+        double yE = -s * eciKm.X + c * eciKm.Y;
+        double zE = eciKm.Z;
 
-        for (int i = 1; i < points.Count; i++) 
-        {
-            if (line == null) break;
-
-            line.positionCount++;
-            line.SetPosition(i, points[i]);
-            yield return new WaitForFixedUpdate();
-        }
+        return new Vector3((float)(xE / 1000.0), (float)(zE / 1000.0), (float)(yE / 1000.0));
     }
 
-    private Vector3 ConvertEciToUnityPosition(SGPdotNET.Util.Vector3 sgpPosition)
+    private double JulianDate(DateTime utc)
     {
-        float x = (float)sgpPosition.X / 1000;
-        float y = (float)sgpPosition.Z / 1000;
-        float z = (float)sgpPosition.Y / 1000;
-
-        return new Vector3(x, y, z);
+        int Y = utc.Year, M = utc.Month;
+        double D = utc.Day + (utc.Hour + (utc.Minute + (utc.Second + utc.Millisecond / 1000.0) / 60.0) / 60.0) / 24.0;
+        if (M <= 2) { Y -= 1; M += 12; }
+        int A = Y / 100; int B = 2 - A + A / 4;
+        return Math.Floor(365.25 * (Y + 4716)) + Math.Floor(30.6001 * (M + 1)) + D + B - 1524.5;
     }
 
-    private Satellite _satellite;
-    public int _orbitSteps = 32;
-    public float _orbitMinutes = 120f;
-    public GameObject _orbitLinePrefab;
+    private double GmstRadians(double jd)
+    {
+        double T = (jd - 2451545.0) / 36525.0;
+        double gmstSec = 67310.54841 + (876600.0 * 3600 + 8640184.812866) * T + 0.093104 * T * T - 6.2e-6 * T * T * T;
+        gmstSec = (gmstSec % 86400.0 + 86400.0) % 86400.0;
+        return gmstSec * (Math.PI / 43200.0);
+    }
+
+    private DateTime _now = DateTime.Now;
+    private Satellite _sat;
 }
