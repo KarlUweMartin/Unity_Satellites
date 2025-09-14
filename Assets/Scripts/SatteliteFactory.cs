@@ -93,9 +93,7 @@ public class SatteliteFactory : MonoBehaviour
         _satellites.Add(satObj.gameObject);
     }
 
-    [SerializeField] private GameObject _orbitLinePrefab, _satellitePrefab;
-    [SerializeField] private int _orbitSteps = 32;
-    [SerializeField] private float _orbitMinutes = 5f;
+    [SerializeField] private GameObject _satellitePrefab;
     private List<GameObject> _satellites = new();
     private Output _output;
     private Coroutine _populationCoroutine;

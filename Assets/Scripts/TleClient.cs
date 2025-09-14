@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using UnityEngine;
 using UnityEngine.Networking;
 
 public class TleClient
@@ -15,7 +14,8 @@ public class TleClient
         {
             output.Text = string.Empty;
             output.Visible = false;
-            AppControl.ActiveTitle = "Select data set...";
+            AppControl.DataSetTitle = "Select data set...";
+            AppControl.SelectedSatellite = null;
             return null;
         }
 
@@ -25,7 +25,7 @@ public class TleClient
             {
                 var op = req.SendWebRequest();
                 while (!op.isDone)
-                    await Task.Yield(); // WebGL-safe "await"
+                    await Task.Yield();
 
 #if UNITY_2020_2_OR_NEWER
                 if (req.result != UnityWebRequest.Result.Success)
@@ -69,7 +69,7 @@ public class TleClient
         { "ARGOS", BaseUrl + "gp.php?GROUP=argos&FORMAT=tle" },
         { "Planet", BaseUrl + "gp.php?GROUP=planet&FORMAT=tle" },
         { "Spire", BaseUrl + "gp.php?GROUP=spire&FORMAT=tle" },
-        { "Geostatinary", BaseUrl + "gp.php?GROUP=geo&FORMAT=tle" },
+        { "Geostationary", BaseUrl + "gp.php?GROUP=geo&FORMAT=tle" },
         { "Geo Protected Zone", BaseUrl + "gp.php?SPECIAL=gpz&FORMAT=tle" },
         { "Geo Protected Zone Plus", BaseUrl + "gp.php?SPECIAL=gpz-plus&FORMAT=tle" },
         { "Intelsat", BaseUrl + "gp.php?GROUP=intelsat&FORMAT=tle" },

@@ -1,4 +1,3 @@
-using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,7 +6,7 @@ public class DataSetList : MonoBehaviour
 {
     void Start()
     {
-        AppControl.OnTitleChanged.AddListener((t) =>  _selectedDataSet.text = t);
+        AppControl.OnDataSetChanged.AddListener((t) =>  _selectedDataSet.text = t);
 
         var tle = new TleClient();
         foreach (var dataSet in tle.DataSetUrls)
@@ -16,7 +15,8 @@ public class DataSetList : MonoBehaviour
             entry.GetComponentInChildren<TextMeshProUGUI>().text = dataSet.Key;
             entry.GetComponent<Button>().onClick.AddListener(() =>
             {
-                AppControl.ActiveTitle = dataSet.Key;
+                AppControl.DataSetTitle = dataSet.Key;
+                AppControl.SelectedSatellite = null;
                 _ = _satelliteFactory.GetSattelites(dataSet.Value);
                 Open = false;
             });            

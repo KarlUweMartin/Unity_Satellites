@@ -1389,10 +1389,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc35627e1d2c79b42bdf8b235492696a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _orbitLinePrefab: {fileID: 617226090903681816, guid: 9f103658e633a9a449f9b71f6311344f, type: 3}
   _satellitePrefab: {fileID: 2236370556397054884, guid: 87464b8f4f7ab464d9d3ccf2d476e75b, type: 3}
-  _orbitSteps: 32
-  _orbitMinutes: 5
 --- !u!114 &1176159474
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1405,7 +1402,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81294084b5ca1634a822fa607aaeb2b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _lineRenderer: {fileID: 667168904}
+  _orbitLine: {fileID: 667168904}
+  _pixelRadius: 16
+  _hitMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &1184769190
 GameObject:
   m_ObjectHideFlags: 0
@@ -1715,7 +1716,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.5739339, z: 0, w: 0.81890166}
   m_LocalPosition: {x: 31.5, y: 0, z: -13.8}
-  m_LocalScale: {x: 3.54, y: 3.54, z: 3.54}
+  m_LocalScale: {x: 3.2, y: 3.2, z: 3.2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}

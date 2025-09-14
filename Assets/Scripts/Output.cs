@@ -8,6 +8,18 @@ public class Output : MonoBehaviour
     private void Start()
     {
         Instance = this;
+        AppControl.OnSatelliteChanged.AddListener((s) => 
+        {
+            if (s == null) 
+            {
+                Visible = false;
+                Text = string.Empty;
+                return;
+            }
+
+            Text = s.name;
+            Visible = true;
+        });
     }
 
     public bool Visible 

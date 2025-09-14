@@ -5,16 +5,28 @@ public static class AppControl
 {
     public static DateTime StartTime { get; private set; } = DateTime.Now;
 
-    public static UnityEvent<string> OnTitleChanged = new();
 
-    private static string _activeTitle;
-    public static string ActiveTitle 
+    public static UnityEvent<SatelliteObject> OnSatelliteChanged = new();
+    private static SatelliteObject _selectedSatellite;
+    public static SatelliteObject SelectedSatellite
     {
-        get => _activeTitle;
+        get => _selectedSatellite;
+        set
+        {
+            _selectedSatellite = value;
+            OnSatelliteChanged.Invoke(value);
+        }
+    }
+
+    public static UnityEvent<string> OnDataSetChanged = new();
+    private static string _datSetTitle;
+    public static string DataSetTitle 
+    {
+        get => _datSetTitle;
         set 
         {
-            _activeTitle = value;
-            OnTitleChanged.Invoke(value);
+            _datSetTitle = value;
+            OnDataSetChanged.Invoke(value);
         }    
     }
 }
