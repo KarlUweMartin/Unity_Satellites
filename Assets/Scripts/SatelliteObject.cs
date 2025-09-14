@@ -12,6 +12,12 @@ public class SatelliteObject : MonoBehaviour
         name = satellite.Name;
         var eciNow = satellite.Predict(_now);
         transform.localPosition = ConvertEciToUnityPositionAt(eciNow.Position, _now);
+        Select(false);
+    }
+
+    public void Select(bool selected) 
+    {
+        _meshRenderer.material.SetColor("_Color", selected ? _selected : _deselected);
     }
 
     public IEnumerator OrbitAnimation(LineRenderer line)
@@ -42,26 +48,26 @@ public class SatelliteObject : MonoBehaviour
 
     private Vector3[] OrbitPositions_Fast()
     {
-        var now = DataController.StartTime;
-        Vector3 r1 = ConvertEciToUnityPositionAt(_sat.Predict(now).Position, _now);
-        Vector3 r2 = ConvertEciToUnityPositionAt(_sat.Predict(now.AddMinutes(120)).Position, _now);
-        Vector3 r3 = ConvertEciToUnityPositionAt(_sat.Predict(now.AddMinutes(240)).Position, _now);
+        var now = AppControl.StartTime;
+        var r1 = ConvertEciToUnityPositionAt(_sat.Predict(now).Position, _now);
+        var r2 = ConvertEciToUnityPositionAt(_sat.Predict(now.AddMinutes(120)).Position, _now);
+        var r3 = ConvertEciToUnityPositionAt(_sat.Predict(now.AddMinutes(240)).Position, _now);
 
-        Vector3 v1 = r2 - r1;
-        Vector3 v2 = r3 - r2;
+        var v1 = r2 - r1;
+        var v2 = r3 - r2;
         var normal = Vector3.Cross(v1, v2).normalized;
         var xAxis = r1.normalized;
         var yAxis = Vector3.Cross(normal, xAxis).normalized;
 
-        float a = (r1.magnitude + r2.magnitude + r3.magnitude) / 3f;
-        float b = a * 0.95f;
+        var a = (r1.magnitude + r2.magnitude + r3.magnitude) / 3f;
+        var b = a * 0.95f;
 
         int steps = 128;
         List<Vector3> orbitPositions = new();
 
         for (int i = 0; i <= steps; i++)
         {
-            float theta = 2 * Mathf.PI * i / steps;
+            var theta = 2 * Mathf.PI * i / steps;
             var point = a * Mathf.Cos(theta) * xAxis + b * Mathf.Sin(theta) * yAxis;
             orbitPositions.Add(point);
         }
@@ -97,6 +103,9 @@ public class SatelliteObject : MonoBehaviour
         return gmstSec * (Math.PI / 43200.0);
     }
 
-    private DateTime _now = DateTime.Now;
+    private DateTime _now = AppControl.StartTime;
     private Satellite _sat;
+
+    [SerializeField] private Color _selected, _deselected;
+    [SerializeField] private MeshRenderer _meshRenderer;
 }

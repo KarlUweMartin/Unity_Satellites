@@ -32,11 +32,11 @@ public class CameraDolly : MonoBehaviour
 
     private void HandlePinchInput(Touch touch1, Touch touch2)
     {
-        float currentDist = Vector2.Distance(touch1.position, touch2.position);
+        var currentDist = Vector2.Distance(touch1.position, touch2.position);
 
         if (_lastDist > 0f)
         {
-            float pinchDelta = _lastDist + currentDist;
+            var pinchDelta = currentDist - _lastDist;
             _dist -= pinchDelta * _sensitivitiy * 0.02f;
             _dist = Mathf.Clamp(_dist, 7f, 150f);
         }

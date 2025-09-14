@@ -2,11 +2,10 @@ using UnityEngine;
 
 public class SatelliteSelector : MonoBehaviour
 {
-
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
-        {
+        {          
             if (_output == null) 
             {
                 _output = Output.Instance;
@@ -26,6 +25,9 @@ public class SatelliteSelector : MonoBehaviour
                     _output.Visible = true;
                     _output.Text = satellite.name.ToString();
                     _orbitAnimation = StartCoroutine(satellite.OrbitAnimation(_lineRenderer));
+                    _selection = satellite;
+                    _selection.transform.localScale = Vector3.one * .02f;
+                    _selection.Select(true);
                 }
                 else if (hit.collider.gameObject.TryGetComponent<MoonBehaviour>(out _))
                 {
@@ -44,14 +46,15 @@ public class SatelliteSelector : MonoBehaviour
 
     private void ClearLastSelected() 
     {
-        if(_activeOrbit != null) 
+        if(_selection != null) 
         {
-            Destroy(_activeOrbit);
+            _selection.Select(false);
+            _selection.transform.localScale = Vector3.one * .01f;
         }
     }
 
     [SerializeField] private LineRenderer _lineRenderer;
     private Output _output;
-    private GameObject _activeOrbit;
+    private SatelliteObject _selection;
     private Coroutine _orbitAnimation;
 }

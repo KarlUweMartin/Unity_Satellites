@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 2722382814270050005}
   - component: {fileID: 4438276338685693325}
   - component: {fileID: 4465587136772101595}
-  - component: {fileID: 7289600838713166566}
   - component: {fileID: -3832129447278006417}
+  - component: {fileID: 4756717786972602412}
   m_Layer: 0
   m_Name: SatellitePrefab
   m_TagString: Untagged
@@ -30,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.06, y: 0.06, z: 0.06}
+  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -42,7 +42,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2236370556397054884}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: -2432090755550338912, guid: ed828ecafb291b34196947d8eb0adab5, type: 3}
 --- !u!23 &4465587136772101595
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -60,9 +60,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -88,7 +85,22 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &7289600838713166566
+--- !u!114 &-3832129447278006417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2236370556397054884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 543019e457152714994112563d4563dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _selected: {r: 0, g: 1, b: 0.47592807, a: 0.53333336}
+  _deselected: {r: 0, g: 0.8314109, b: 1, a: 0.24705882}
+  _meshRenderer: {fileID: 4465587136772101595}
+--- !u!65 &4756717786972602412
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -107,20 +119,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 8, y: 8, z: 8}
+  m_Size: {x: 32, y: 32, z: 32}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-3832129447278006417
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2236370556397054884}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 543019e457152714994112563d4563dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _orbitSteps: 32
-  _orbitMinutes: 120
-  _orbitLinePrefab: {fileID: 617226090903681816, guid: 9f103658e633a9a449f9b71f6311344f, type: 3}

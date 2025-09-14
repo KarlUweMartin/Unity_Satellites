@@ -9,6 +9,15 @@ public class TleClient
     public async Task<string> DownloadTleAsync(string tleUrl)
     {
         if (string.IsNullOrWhiteSpace(tleUrl)) return null;
+        var output = Output.Instance;
+
+        if (tleUrl == "NULL") 
+        {
+            output.Text = string.Empty;
+            output.Visible = false;
+            AppControl.ActiveTitle = "Select data set...";
+            return null;
+        }
 
         try
         {
@@ -24,7 +33,7 @@ public class TleClient
                 if (req.isNetworkError || req.isHttpError)
 #endif
                 {
-                    Output.Instance.Text = req.error;
+                    output.Text = req.error;
                     throw new Exception(req.error);
                 }
 
@@ -33,35 +42,36 @@ public class TleClient
         }
         catch (Exception ex)
         {
-            Output.Instance.Text = ex.Message;
+            output.Text = ex.Message;
             throw;
         }
     }
 
     public Dictionary<string, string> DataSetUrls = new Dictionary<string, string>
     {
-        { "Active Sattelites", BaseUrl + "gp.php?GROUP=active&FORMAT=tle" },
-        { "Last 30 days", BaseUrl + "gp.php?GROUP=last-30-days&FORMAT=tle" },
+        { "   ", "NULL" },
+        { "Active Satellites", BaseUrl + "gp.php?GROUP=active&FORMAT=tle" },
+        { "Last 30 Days", BaseUrl + "gp.php?GROUP=last-30-days&FORMAT=tle" },
         { "Starlink", BaseUrl + "gp.php?GROUP=starlink&FORMAT=tle" },
         { "Stations", BaseUrl + "gp.php?GROUP=stations&FORMAT=tle" },
-        { "Visual", BaseUrl + "gp.php?GROUP=visual&FORMAT=tle" },
+        { "Visible at Night", BaseUrl + "gp.php?GROUP=visual&FORMAT=tle" },
         { "Cosmos1408Debris", BaseUrl + "gp.php?GROUP=cosmos-1408-debris&FORMAT=tle" },
-        { "Fengyun1CDebris", BaseUrl + "gp.php?GROUP=fengyun-1c-debris&FORMAT=tle" },
-        { "Iridium33Debris", BaseUrl + "gp.php?GROUP=iridium-33-debris&FORMAT=tle" },
-        { "Cosmos2251Debris", BaseUrl + "gp.php?GROUP=cosmos-2251-debris&FORMAT=tle" },
+        { "Fengyun1C Debris", BaseUrl + "gp.php?GROUP=fengyun-1c-debris&FORMAT=tle" },
+        { "Iridium33 Debris", BaseUrl + "gp.php?GROUP=iridium-33-debris&FORMAT=tle" },
+        { "Cosmos2251 Debris", BaseUrl + "gp.php?GROUP=cosmos-2251-debris&FORMAT=tle" },
         { "Weather", BaseUrl + "gp.php?GROUP=weather&FORMAT=tle" },
         { "NOAA", BaseUrl + "gp.php?GROUP=noaa&FORMAT=tle" },
         { "GOES", BaseUrl + "gp.php?GROUP=goes&FORMAT=tle" },
-        { "EarthResources", BaseUrl + "gp.php?GROUP=resource&FORMAT=tle" },
+        { "Earth Resources", BaseUrl + "gp.php?GROUP=resource&FORMAT=tle" },
         { "SARSAT", BaseUrl + "gp.php?GROUP=sarsat&FORMAT=tle" },
-        { "DisasterMonitoring", BaseUrl + "gp.php?GROUP=dmc&FORMAT=tle" },
+        { "Disaster Monitoring", BaseUrl + "gp.php?GROUP=dmc&FORMAT=tle" },
         { "TDRSS", BaseUrl + "gp.php?GROUP=tdrss&FORMAT=tle" },
         { "ARGOS", BaseUrl + "gp.php?GROUP=argos&FORMAT=tle" },
         { "Planet", BaseUrl + "gp.php?GROUP=planet&FORMAT=tle" },
         { "Spire", BaseUrl + "gp.php?GROUP=spire&FORMAT=tle" },
-        { "Geo", BaseUrl + "gp.php?GROUP=geo&FORMAT=tle" },
-        { "GeoProtectedZone", BaseUrl + "gp.php?SPECIAL=gpz&FORMAT=tle" },
-        { "GeoProtectedZonePlus", BaseUrl + "gp.php?SPECIAL=gpz-plus&FORMAT=tle" },
+        { "Geostatinary", BaseUrl + "gp.php?GROUP=geo&FORMAT=tle" },
+        { "Geo Protected Zone", BaseUrl + "gp.php?SPECIAL=gpz&FORMAT=tle" },
+        { "Geo Protected Zone Plus", BaseUrl + "gp.php?SPECIAL=gpz-plus&FORMAT=tle" },
         { "Intelsat", BaseUrl + "gp.php?GROUP=intelsat&FORMAT=tle" },
         { "SES", BaseUrl + "gp.php?GROUP=ses&FORMAT=tle" },
         { "Eutelsat", BaseUrl + "gp.php?GROUP=eutelsat&FORMAT=tle" },
@@ -75,8 +85,8 @@ public class TleClient
         { "Globalstar", BaseUrl + "gp.php?GROUP=globalstar&FORMAT=tle" },
         { "Amateur", BaseUrl + "gp.php?GROUP=amateur&FORMAT=tle" },
         { "SatNOGS", BaseUrl + "gp.php?GROUP=satnogs&FORMAT=tle" },
-        { "ExperimentalComm", BaseUrl + "gp.php?GROUP=x-comm&FORMAT=tle" },
-        { "OtherComm", BaseUrl + "gp.php?GROUP=other-comm&FORMAT=tle" },
+        { "Experimental Comms", BaseUrl + "gp.php?GROUP=x-comm&FORMAT=tle" },
+        { "Other Comms", BaseUrl + "gp.php?GROUP=other-comm&FORMAT=tle" },
         { "GNSS", BaseUrl + "gp.php?GROUP=gnss&FORMAT=tle" },
         { "GPSOps", BaseUrl + "gp.php?GROUP=gps-ops&FORMAT=tle" },
         { "GLONASS", BaseUrl + "gp.php?GROUP=glo-ops&FORMAT=tle" },

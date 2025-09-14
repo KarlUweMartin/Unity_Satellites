@@ -7,15 +7,16 @@ public class DataSetList : MonoBehaviour
 {
     void Start()
     {
+        AppControl.OnTitleChanged.AddListener((t) =>  _selectedDataSet.text = t);
+
         var tle = new TleClient();
-        var dataSets = Resources.LoadAll<TextAsset>("TLE");
         foreach (var dataSet in tle.DataSetUrls)
         {
             var entry = Instantiate(_entryPrefab, _list, false);
             entry.GetComponentInChildren<TextMeshProUGUI>().text = dataSet.Key;
             entry.GetComponent<Button>().onClick.AddListener(() =>
             {
-                _selectedDataSet.text = dataSet.Key;
+                AppControl.ActiveTitle = dataSet.Key;
                 _ = _satelliteFactory.GetSattelites(dataSet.Value);
                 Open = false;
             });            

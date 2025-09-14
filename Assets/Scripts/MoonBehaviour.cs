@@ -6,7 +6,7 @@ public class MoonBehaviour : MonoBehaviour
     void Start()
     {
         DateTime reference = new DateTime(2000, 1, 1, 12, 0, 0, DateTimeKind.Utc);
-        TimeSpan elapsed = DataController.StartTime - reference;
+        TimeSpan elapsed = AppControl.StartTime - reference;
 
         double daysElapsed = elapsed.TotalDays;
         double orbitFraction = daysElapsed / lunarOrbitPeriodDays;
