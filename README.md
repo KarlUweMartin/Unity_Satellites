@@ -6,7 +6,7 @@
 
 #### Usage
 
-Select a dataset from the menu to load satellites. Each satellite can be clicked to reveal its orbit and it's name.
+Select a dataset from the menu to load satellites. Each satellite can be clicked to reveal its orbit and name.
 
 #### Technical Details
 
@@ -15,7 +15,7 @@ Optimized for **WebGL** - but should also work on other platforms.
 
 #### Know Issues
 
-- Orbits of satellites with elliptical, irregular or non-circular orbits are not displayed correctly.
+- Orbit visualization of satellites with elliptical, irregular or non-circular orbits are not displayed correctly.
 - Large datasets may cause performance issues (especially on mobile devices)
 
 #### Sources
